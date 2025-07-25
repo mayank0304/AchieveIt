@@ -20,7 +20,7 @@ const Projects = () => {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 300,
+        seconds: 90,
       },
     });
     return notificationID;

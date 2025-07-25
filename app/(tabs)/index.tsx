@@ -21,7 +21,7 @@ const Home = () => {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 300,
+        seconds: 120,
       },
     });
     return notificationID;

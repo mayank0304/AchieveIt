@@ -26,7 +26,7 @@ AchieveIt is a modern, intuitive task and project management application built w
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mayank0304/AchieveIt.git
    cd AchieveIt
    ```
 
@@ -43,8 +43,7 @@ AchieveIt is a modern, intuitive task and project management application built w
 4. Running on your device:
    - Install Expo Go from your device's app store
    - Scan the QR code shown in the terminal with:
-     - Camera app (iOS)
-     - Expo Go app (Android)
+     - Expo Go app
    - The app will load on your device
 
 ## Technical Implementation
@@ -80,7 +79,7 @@ AchieveIt is a modern, intuitive task and project management application built w
 
 1. **Dark Theme Design**:
    - Dark Onyx background (`#0F172A`) with lighter content areas (`#1E293B`)
-   - Cyan accents (`#06B6D4`) for interactive elements
+   - Cyan accents (Tailwind: `cyan-500`) for interactive elements
    - Semi-transparent modals for better context
 
 2. **Layout Optimization**:
