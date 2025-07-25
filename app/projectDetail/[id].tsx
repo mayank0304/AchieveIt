@@ -25,12 +25,7 @@ const ProjectDetail = () => {
       });
     };
     loadProject();
-  });
-
-  useEffect(() => {
-    const saveTaskToProject = async () => {};
-    saveTaskToProject();
-  });
+  }, [id]);
 
   const addTaskToProject = async () => {
     if (projectTask?.trim()) {
@@ -41,7 +36,7 @@ const ProjectDetail = () => {
       };
 
       const jsonProject = await AsyncStorage.getItem("PROJECTS");
-      const allProjects = JSON.parse(jsonProject!) || [];
+      const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
       const updatedProjects = allProjects.map((p: Project) => {
         if (p.id.toString() === id) {
@@ -61,7 +56,7 @@ const ProjectDetail = () => {
               ...prev,
               projectTasks: [...prev.projectTasks, newTask],
             }
-          : prev
+          : prev,
       );
     }
     setProjectTask("");
@@ -71,14 +66,14 @@ const ProjectDetail = () => {
     if (!selectedTask || !project) return;
 
     const updatedTasks: Task[] = project.projectTasks.map((t) =>
-      t.id === selectedTask.id ? { ...t, isCompleted: !t.isCompleted } : t
+      t.id === selectedTask.id ? { ...t, isCompleted: !t.isCompleted } : t,
     );
 
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
-    const allProjects: Project[] = JSON.parse(jsonProject!) || [];
+    const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
-    const updatedProjects = allProjects.map((p) =>
-      p.id === project.id ? { ...p, projectTasks: updatedTasks } : p
+    const updatedProjects = allProjects.map((p: Project) =>
+      p.id === project.id ? { ...p, projectTasks: updatedTasks } : p,
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(updatedProjects));
@@ -95,14 +90,14 @@ const ProjectDetail = () => {
     if (!selectedTask || !project) return;
 
     const filteredTask: Task[] = project.projectTasks.filter(
-      (t) => t.id !== selectedTask.id
+      (t) => t.id !== selectedTask.id,
     );
 
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
-    const allProjects: Project[] = JSON.parse(jsonProject!) || [];
+    const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
-    const deletedProjects = allProjects.map((p) =>
-      p.id === project.id ? { ...p, projectTasks: filteredTask } : p
+    const deletedProjects = allProjects.map((p: Project) =>
+      p.id === project.id ? { ...p, projectTasks: filteredTask } : p,
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(deletedProjects));
@@ -117,14 +112,16 @@ const ProjectDetail = () => {
 
   const deleteProject = async () => {
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
-    const allProjects = JSON.parse(jsonProject!) || [];
+    const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
-    if(project?.notificationId) {
-      await Notifications.cancelScheduledNotificationAsync(project?.notificationId);
+    if (project?.notificationId) {
+      await Notifications.cancelScheduledNotificationAsync(
+        project?.notificationId,
+      );
     }
 
     const updatedProjects = allProjects.filter(
-      (p: Project) => p.id.toString() !== id
+      (p: Project) => p.id.toString() !== id,
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(updatedProjects));
@@ -132,9 +129,9 @@ const ProjectDetail = () => {
     router.back();
   };
 
-  const completedProjectTasks = project?.projectTasks.filter(
-    (task) => task.isCompleted
-  ).length;
+  const completedProjectTasks = project?.projectTasks?.filter(
+    (task) => task.isCompleted,
+  )?.length;
   const totalProjectTasks = project?.projectTasks.length;
 
   return (
@@ -205,7 +202,7 @@ const ProjectDetail = () => {
           </Pressable>
         </View>
         {/* Progress Bar */}
-        {totalProjectTasks! > 0 && (
+        {(totalProjectTasks || 0) > 0 && (
           <View className="bg-slate-700 h-2 rounded-full overflow-hidden mb-4">
             <View
               className="bg-cyan-500 h-full rounded-full"

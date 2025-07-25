@@ -73,7 +73,7 @@ const Home = () => {
 
   const updateTask = async () => {
     const updatedTask = tasks.map((t) =>
-      t.id === selectedTask?.id ? { ...t, isCompleted: !t.isCompleted } : t
+      t.id === selectedTask?.id ? { ...t, isCompleted: !t.isCompleted } : t,
     );
     setTasks(updatedTask);
     AsyncStorage.setItem("TASKS", JSON.stringify(updatedTask));
@@ -84,7 +84,7 @@ const Home = () => {
     if (selectedTask?.notificationId) {
       try {
         await Notifications.cancelScheduledNotificationAsync(
-          selectedTask.notificationId
+          selectedTask.notificationId,
         );
       } catch (e) {
         console.log("Failed to cancel notification:", e);

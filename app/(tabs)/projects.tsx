@@ -57,7 +57,7 @@ const Projects = () => {
         }
       };
       loadProjectsFromStorage();
-    }, [])
+    }, []),
   );
 
   const createProject = async () => {
@@ -84,9 +84,6 @@ const Projects = () => {
       console.log(e);
     }
   };
-
-  // const completedTasks = tasks.filter((task) => task.isCompleted).length;
-  // const totalTasks = tasks.length;
 
   return (
     <>
@@ -162,7 +159,7 @@ const Projects = () => {
                               style={{
                                 width: `${
                                   (item.projectTasks.filter(
-                                    (t) => t.isCompleted
+                                    (t) => t.isCompleted,
                                   ).length /
                                     item.projectTasks.length) *
                                   100
