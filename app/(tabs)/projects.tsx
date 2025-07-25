@@ -10,23 +10,21 @@ const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projecttitle, setProjectTitle] = useState("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const body = "Congratulations on new Project!"
-
+  const body = "Congratulations on new Project!";
 
   const scheduleNotification = async (title: string) => {
-      const notificationID = await Notifications.scheduleNotificationAsync({
-        content: {
-          title,
-          body,
-        },
-        trigger: {
-          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-          seconds: 300,
-        },
-      });
-      return notificationID;
-    };
-
+    const notificationID = await Notifications.scheduleNotificationAsync({
+      content: {
+        title,
+        body,
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 300,
+      },
+    });
+    return notificationID;
+  };
 
   // Store Tasks
   useEffect(() => {
@@ -69,7 +67,7 @@ const Projects = () => {
         id: Date.now(),
         projectName: projecttitle.trim(),
         projectTasks: [],
-        notificationId
+        notificationId,
       };
       setProjects([...projects, newProject]);
       setProjectTitle("");
@@ -154,7 +152,7 @@ const Projects = () => {
                 renderItem={({ item, index }) => (
                   <Link href={`/projectDetail/${item.id}`} asChild>
                     <Pressable
-                      className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%]`}
+                      className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%] bg-[#1E293B] border-slate-600`}
                     >
                       <View className="mb-2">
                         {item.projectTasks.length > 0 && (
@@ -176,9 +174,7 @@ const Projects = () => {
                       </View>
                       <View className="flex-row items-center justify-center">
                         {/* Task Text */}
-                        <Text
-                          className={`p-4 text-base`}
-                        >
+                        <Text className={`p-4 text-slate-100 text-lg`}>
                           {item.projectName}
                         </Text>
                       </View>

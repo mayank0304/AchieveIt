@@ -11,7 +11,7 @@ const Home = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
-  const body = "Achieve IT!!";
+  const body = "Achieve IT!";
 
   const scheduleNotification = async (title: string) => {
     const notificationID = await Notifications.scheduleNotificationAsync({
@@ -99,6 +99,7 @@ const Home = () => {
   const resetStorage = async () => {
     try {
       if (tasks.length > 0) {
+        await Notifications.cancelAllScheduledNotificationsAsync();
         setTasks([]);
         await AsyncStorage.removeItem("TASKS");
       }
