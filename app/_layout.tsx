@@ -8,6 +8,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 
 import "../global.css";
 
+import { initializeNotifications } from '@/lib';
+initializeNotifications();
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({

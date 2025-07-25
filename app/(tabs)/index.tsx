@@ -1,5 +1,6 @@
 import { Task } from "@/type/task";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,6 +11,21 @@ const Home = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<Task>();
+  const body = "Achieve IT!!";
+
+  const scheduleNotification = async (title: string) => {
+    const notificationID = await Notifications.scheduleNotificationAsync({
+      content: {
+        title,
+        body,
+      },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 1000,
+      },
+    });
+    return notificationID;
+  };
 
   // Store Tasks
   useEffect(() => {
@@ -41,12 +57,14 @@ const Home = () => {
     loadTaskFromStorage();
   }, []);
 
-  const addTask = () => {
+  const addTask = async () => {
     if (task.trim()) {
+      const notificationId = await scheduleNotification(task.trim());
       const newTask = {
         id: Date.now(),
         title: task.trim(),
         isCompleted: false,
+        notificationId,
       };
       setTasks([...tasks, newTask]);
       setTask("");
@@ -63,6 +81,15 @@ const Home = () => {
   };
 
   const deleteTask = async () => {
+    if (selectedTask?.notificationId) {
+      try {
+        await Notifications.cancelScheduledNotificationAsync(
+          selectedTask.notificationId
+        );
+      } catch (e) {
+        console.log("Failed to cancel notification:", e);
+      }
+    }
     const filteredTask = tasks.filter((t) => t.id !== selectedTask?.id);
     setTasks(filteredTask);
     AsyncStorage.setItem("TASKS", JSON.stringify(filteredTask));
@@ -80,7 +107,7 @@ const Home = () => {
     }
   };
 
-  const completedTasks = tasks.filter(task => task.isCompleted).length;
+  const completedTasks = tasks.filter((task) => task.isCompleted).length;
   const totalTasks = tasks.length;
 
   return (
@@ -104,7 +131,7 @@ const Home = () => {
               {/* Action Buttons */}
               <Pressable
                 onPress={updateTask}
-                className={`${selectedTask.isCompleted ? 'bg-amber-500' : 'bg-emerald-500'} rounded-2xl py-4 px-6 mb-3 shadow-lg`}
+                className={`${selectedTask.isCompleted ? "bg-amber-500" : "bg-emerald-500"} rounded-2xl py-4 px-6 mb-3 shadow-lg`}
               >
                 <Text className="text-white text-center font-semibold text-base">
                   {selectedTask.isCompleted
@@ -138,7 +165,9 @@ const Home = () => {
         <View className="px-6 pt-4 pb-6">
           <View className="flex-row justify-between items-start mb-4">
             <View>
-              <Text className="text-slate-200 text-3xl font-bold">My Tasks</Text>
+              <Text className="text-slate-200 text-3xl font-bold">
+                My Tasks
+              </Text>
               <Text className="text-slate-400 text-base mt-1">
                 {completedTasks} of {totalTasks} completed
               </Text>
@@ -154,7 +183,7 @@ const Home = () => {
           {/* Progress Bar */}
           {totalTasks > 0 && (
             <View className="bg-slate-700 h-2 rounded-full overflow-hidden mb-4">
-              <View 
+              <View
                 className="bg-cyan-500 h-full rounded-full"
                 style={{ width: `${(completedTasks / totalTasks) * 100}%` }}
               />
@@ -175,7 +204,7 @@ const Home = () => {
               onSubmitEditing={addTask}
               returnKeyType="done"
             />
-             <Pressable
+            <Pressable
               onPress={addTask}
               className="bg-cyan-500 rounded-xl py-3 px-6 mt-3 self-end shadow-lg"
             >
@@ -189,7 +218,7 @@ const Home = () => {
           {tasks.length === 0 ? (
             <View className="flex-1 justify-center items-center">
               <Text className="text-slate-400 text-lg text-center">
-                No tasks yet{'\n'}Add one above to get started! 🎯
+                No tasks yet{"\n"}Add one above to get started! 🎯
               </Text>
             </View>
           ) : (
@@ -208,28 +237,32 @@ const Home = () => {
                       setShowModal(true);
                     }}
                     className={`mb-3 p-4 rounded-2xl border shadow-lg ${
-                      item.isCompleted 
-                        ? 'bg-[#1E293B] border-emerald-500/30' 
-                        : 'bg-[#1E293B] border-slate-600'
+                      item.isCompleted
+                        ? "bg-[#1E293B] border-emerald-500/30"
+                        : "bg-[#1E293B] border-slate-600"
                     }`}
                   >
                     <View className="flex-row items-center">
                       {/* Custom Checkbox */}
-                      <View className={`w-6 h-6 rounded-full mr-3 border-2 items-center justify-center ${
-                        item.isCompleted 
-                          ? 'bg-emerald-500 border-emerald-500' 
-                          : 'border-slate-500'
-                      }`}>
+                      <View
+                        className={`w-6 h-6 rounded-full mr-3 border-2 items-center justify-center ${
+                          item.isCompleted
+                            ? "bg-emerald-500 border-emerald-500"
+                            : "border-slate-500"
+                        }`}
+                      >
                         {item.isCompleted && (
-                          <Text className="text-white text-xs font-bold">✓</Text>
+                          <Text className="text-white text-xs font-bold">
+                            ✓
+                          </Text>
                         )}
                       </View>
-                      
+
                       {/* Task Text */}
                       <Text
                         className={`flex-1 text-base ${
-                          item.isCompleted 
-                            ? "line-through text-slate-400" 
+                          item.isCompleted
+                            ? "line-through text-slate-400"
                             : "text-slate-100"
                         }`}
                       >
