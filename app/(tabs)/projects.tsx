@@ -1,7 +1,7 @@
 import { Project } from "@/type/task";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -24,21 +24,25 @@ const Projects = () => {
   }, [projects, isLoaded]);
 
   // Load Tasks
-  useEffect(() => {
-    const loadProjectsFromStorage = async () => {
-      try {
-        const storedProjects = await AsyncStorage.getItem("PROJECTS");
-        if (storedProjects) {
-          setProjects(JSON.parse(storedProjects));
+  useFocusEffect(
+    useCallback(() => {
+      const loadProjectsFromStorage = async () => {
+        try {
+          const storedProjects = await AsyncStorage.getItem("PROJECTS");
+          if (storedProjects) {
+            setProjects(JSON.parse(storedProjects));
+          } else {
+            setProjects([]);
+          }
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setIsLoaded(true);
         }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsLoaded(true);
-      }
-    };
-    loadProjectsFromStorage();
-  }, []);
+      };
+      loadProjectsFromStorage();
+    }, [])
+  );
 
   const createProject = () => {
     if (projecttitle.trim()) {
@@ -130,16 +134,34 @@ const Projects = () => {
                 columnWrapperStyle={{ justifyContent: "space-between" }} // Space between columns
                 contentContainerStyle={{ paddingBottom: 100 }} // Bottom padding for tab bar
                 renderItem={({ item, index }) => (
-                 <Link href={"/(tabs)"} asChild>
-                   <View
-                    className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%]  ${
-                      item.isProjectCompleted
-                        ? "bg-[#1E293B] border-emerald-500/30"
-                        : "bg-[#1E293B] border-slate-600"
-                    }`}
-                  >
-                    <View className="flex-row items-center justify-center">
-                      {/* Task Text */}
+                  <Link href={`/projectDetail/${item.id}`} asChild>
+                    <Pressable
+                      className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%]  ${
+                        item.isProjectCompleted
+                          ? "bg-[#1E293B] border-emerald-500/30"
+                          : "bg-[#1E293B] border-slate-600"
+                      }`}
+                    >
+                      <View className="mb-2">
+                        {item.projectTasks.length > 0 && (
+                          <View className="bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <View
+                              className="bg-cyan-500 h-full rounded-full"
+                              style={{
+                                width: `${
+                                  (item.projectTasks.filter(
+                                    (t) => t.isCompleted
+                                  ).length /
+                                    item.projectTasks.length) *
+                                  100
+                                }%`,
+                              }}
+                            />
+                          </View>
+                        )}
+                      </View>
+                      <View className="flex-row items-center justify-center">
+                        {/* Task Text */}
                         <Text
                           className={`p-4 text-base ${
                             item.isProjectCompleted
@@ -149,9 +171,9 @@ const Projects = () => {
                         >
                           {item.projectName}
                         </Text>
-                    </View>
-                  </View>
-                 </Link>
+                      </View>
+                    </Pressable>
+                  </Link>
                 )}
               />
             </>
