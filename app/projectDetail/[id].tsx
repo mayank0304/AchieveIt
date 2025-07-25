@@ -1,5 +1,6 @@
-import { Project, Task } from "@/type/task";
+import { Project, Task } from "@/type/type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import React, { useEffect, useState } from "react";
@@ -106,7 +107,6 @@ const ProjectDetail = () => {
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(deletedProjects));
 
-    // ✅ Make sure projectTasks is always defined
     setProject({
       ...project,
       projectTasks: filteredTask,
@@ -118,6 +118,10 @@ const ProjectDetail = () => {
   const deleteProject = async () => {
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
     const allProjects = JSON.parse(jsonProject!) || [];
+
+    if(project?.notificationId) {
+      await Notifications.cancelScheduledNotificationAsync(project?.notificationId);
+    }
 
     const updatedProjects = allProjects.filter(
       (p: Project) => p.id.toString() !== id

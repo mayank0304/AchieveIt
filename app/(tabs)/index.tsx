@@ -1,4 +1,4 @@
-import { Task } from "@/type/task";
+import { Task } from "@/type/type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Notifications from "expo-notifications";
 import React, { useEffect, useState } from "react";
@@ -21,7 +21,7 @@ const Home = () => {
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 1000,
+        seconds: 300,
       },
     });
     return notificationID;

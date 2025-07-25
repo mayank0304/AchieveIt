@@ -1,5 +1,6 @@
-import { Project } from "@/type/task";
+import { Project } from "@/type/type";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { Link, useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable, Text, TextInput, View } from "react-native";
@@ -9,6 +10,23 @@ const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [projecttitle, setProjectTitle] = useState("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const body = "Congratulations on new Project!"
+
+
+  const scheduleNotification = async (title: string) => {
+      const notificationID = await Notifications.scheduleNotificationAsync({
+        content: {
+          title,
+          body,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 300,
+        },
+      });
+      return notificationID;
+    };
+
 
   // Store Tasks
   useEffect(() => {
@@ -44,14 +62,14 @@ const Projects = () => {
     }, [])
   );
 
-  const createProject = () => {
+  const createProject = async () => {
     if (projecttitle.trim()) {
+      const notificationId = await scheduleNotification(projecttitle.trim());
       const newProject = {
         id: Date.now(),
         projectName: projecttitle.trim(),
-        projectDescription: "",
         projectTasks: [],
-        isProjectCompleted: false,
+        notificationId
       };
       setProjects([...projects, newProject]);
       setProjectTitle("");
@@ -136,11 +154,7 @@ const Projects = () => {
                 renderItem={({ item, index }) => (
                   <Link href={`/projectDetail/${item.id}`} asChild>
                     <Pressable
-                      className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%]  ${
-                        item.isProjectCompleted
-                          ? "bg-[#1E293B] border-emerald-500/30"
-                          : "bg-[#1E293B] border-slate-600"
-                      }`}
+                      className={`mb-3 p-4 rounded-2xl border shadow-lg w-[48%]`}
                     >
                       <View className="mb-2">
                         {item.projectTasks.length > 0 && (
@@ -163,11 +177,7 @@ const Projects = () => {
                       <View className="flex-row items-center justify-center">
                         {/* Task Text */}
                         <Text
-                          className={`p-4 text-base ${
-                            item.isProjectCompleted
-                              ? "line-through text-slate-400"
-                              : "text-slate-100"
-                          }`}
+                          className={`p-4 text-base`}
                         >
                           {item.projectName}
                         </Text>
