@@ -42,6 +42,7 @@ AchieveIt is a modern, intuitive task and project management application built w
 
 4. Running on your device:
    - Install Expo Go from your device's app store
+   - If the server is in development mode, you will need to enter 's' in terminal to go into Expo Go mode.
    - Scan the QR code shown in the terminal with:
      - Expo Go app
    - The app will load on your device
