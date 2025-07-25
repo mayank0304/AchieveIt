@@ -1,43 +1,44 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
 
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+       screenOptions={{
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarStyle: {
+          backgroundColor: "#1E293B",
+          borderTopLeftRadius: 15,
+          borderTopRightRadius: 15,
+          borderBottomLeftRadius: 15,
+          borderBottomRightRadius: 15,
+          marginHorizontal: 40,
+          marginBottom: 30,
+          position: "absolute",
+          paddingTop: 5
+        },
+        tabBarShowLabel: true,
+        tabBarLabelStyle: {
+          fontSize: 13
+        },
+        tabBarActiveTintColor: '#06B6D4',    // Cyan for active tab
+        tabBarInactiveTintColor: '#64748B',
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Tasks',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="checklist" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="projects"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Projects',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="doc.on.doc" color={color} />,
         }}
       />
     </Tabs>
