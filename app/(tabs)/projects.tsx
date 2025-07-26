@@ -171,7 +171,7 @@ const Projects = () => {
                       </View>
                       <View className="flex-row items-center justify-center">
                         {/* Task Text */}
-                        <Text className={`p-4 text-slate-100 text-lg`}>
+                        <Text className={`p-4 text-center text-slate-100 text-lg`}>
                           {item.projectName}
                         </Text>
                       </View>

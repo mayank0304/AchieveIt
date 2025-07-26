@@ -56,7 +56,7 @@ const ProjectDetail = () => {
               ...prev,
               projectTasks: [...prev.projectTasks, newTask],
             }
-          : prev,
+          : prev
       );
     }
     setProjectTask("");
@@ -66,14 +66,14 @@ const ProjectDetail = () => {
     if (!selectedTask || !project) return;
 
     const updatedTasks: Task[] = project.projectTasks.map((t) =>
-      t.id === selectedTask.id ? { ...t, isCompleted: !t.isCompleted } : t,
+      t.id === selectedTask.id ? { ...t, isCompleted: !t.isCompleted } : t
     );
 
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
     const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
     const updatedProjects = allProjects.map((p: Project) =>
-      p.id === project.id ? { ...p, projectTasks: updatedTasks } : p,
+      p.id === project.id ? { ...p, projectTasks: updatedTasks } : p
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(updatedProjects));
@@ -90,14 +90,14 @@ const ProjectDetail = () => {
     if (!selectedTask || !project) return;
 
     const filteredTask: Task[] = project.projectTasks.filter(
-      (t) => t.id !== selectedTask.id,
+      (t) => t.id !== selectedTask.id
     );
 
     const jsonProject = await AsyncStorage.getItem("PROJECTS");
     const allProjects = jsonProject ? JSON.parse(jsonProject) : [];
 
     const deletedProjects = allProjects.map((p: Project) =>
-      p.id === project.id ? { ...p, projectTasks: filteredTask } : p,
+      p.id === project.id ? { ...p, projectTasks: filteredTask } : p
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(deletedProjects));
@@ -116,12 +116,12 @@ const ProjectDetail = () => {
 
     if (project?.notificationId) {
       await Notifications.cancelScheduledNotificationAsync(
-        project?.notificationId,
+        project?.notificationId
       );
     }
 
     const updatedProjects = allProjects.filter(
-      (p: Project) => p.id.toString() !== id,
+      (p: Project) => p.id.toString() !== id
     );
 
     await AsyncStorage.setItem("PROJECTS", JSON.stringify(updatedProjects));
@@ -130,7 +130,7 @@ const ProjectDetail = () => {
   };
 
   const completedProjectTasks = project?.projectTasks?.filter(
-    (task) => task.isCompleted,
+    (task) => task.isCompleted
   )?.length;
   const totalProjectTasks = project?.projectTasks.length;
 
@@ -186,8 +186,12 @@ const ProjectDetail = () => {
       {/* Header Section with Stats */}
       <View className="px-6 pt-4 pb-6">
         <View className="flex-row justify-between items-start mb-4">
-          <View>
-            <Text className="text-slate-200 text-3xl font-bold">
+          <View className="flex-1 pr-2">
+            <Text
+              className="text-slate-200 text-xl font-semibold"
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
               {project?.projectName}
             </Text>
             <Text className="text-slate-400 text-base mt-1">
@@ -201,6 +205,7 @@ const ProjectDetail = () => {
             <Text className="text-slate-300 font-medium">Delete</Text>
           </Pressable>
         </View>
+
         {/* Progress Bar */}
         {(totalProjectTasks || 0) > 0 && (
           <View className="bg-slate-700 h-2 rounded-full overflow-hidden mb-4">
@@ -214,7 +219,7 @@ const ProjectDetail = () => {
         )}
       </View>
 
-      {/* Input Section with Modern Design */}
+      {/* Input Section*/}
       <View className="px-6 mb-6">
         <View className="bg-[#1E293B] rounded-2xl p-4 border border-slate-600 shadow-lg">
           <TextInput
