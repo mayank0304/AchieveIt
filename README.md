@@ -16,13 +16,23 @@ AchieveIt is a modern, intuitive task and project management application built w
 
 ## Installation and Setup
 
-### Prerequisites
+### Direct Download (Android)
+
+You can download the latest APK directly from the GitHub releases section located in the right sidebar of this repository. Simply:
+
+1. Navigate to the "Releases" section on the right side of this GitHub repository
+2. Download the APK file from the latest release
+3. Install it on your Android device
+
+### Development Setup
+
+#### Prerequisites
 
 - Node.js
 - npm
 - Expo Go app installed on your mobile device
 
-### Getting Started
+#### Getting Started
 
 1. Clone the repository:
    ```bash
